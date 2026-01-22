@@ -28,7 +28,7 @@ export default function AdminPage() {
 
     useEffect(() => {
         // Check if already logged in for this session
-        if (sessionStorage.getItem("fouq_admin_auth") === "true") {
+        if (localStorage.getItem("fouq_admin_auth") === "true") {
             setIsAuthenticated(true);
             loadFeedback();
         }
@@ -58,7 +58,7 @@ export default function AdminPage() {
 
             if (response.ok) {
                 setIsAuthenticated(true);
-                sessionStorage.setItem("fouq_admin_auth", "true");
+                localStorage.setItem("fouq_admin_auth", "true");
                 loadFeedback();
                 Swal.fire({
                     title: "أهلاً بيك!",
@@ -173,7 +173,7 @@ export default function AdminPage() {
     };
 
     const handleLogout = () => {
-        sessionStorage.removeItem("fouq_admin_auth");
+        localStorage.removeItem("fouq_admin_auth");
         setIsAuthenticated(false);
         Swal.fire({
             title: "باي باي!",
