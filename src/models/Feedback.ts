@@ -26,6 +26,9 @@ const FeedbackSchema = new Schema({
         type: Date,
         default: Date.now,
     },
+    screenshot: {
+        type: String, // Store as Base64
+    },
 });
 
 const Feedback = models.Feedback || model('Feedback', FeedbackSchema);

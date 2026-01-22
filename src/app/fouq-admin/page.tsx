@@ -14,6 +14,7 @@ interface Feedback {
     message: string;
     status: "pending" | "published";
     date: string;
+    screenshot?: string;
 }
 
 export default function AdminPage() {
@@ -305,6 +306,33 @@ export default function AdminPage() {
                                             <div className="p-5 md:p-6 bg-white/5 rounded-3xl border border-white/5">
                                                 <p className="text-white/80 font-cairo leading-relaxed text-sm md:text-base">{item.message}</p>
                                             </div>
+
+                                            {item.screenshot && (
+                                                <div className="mt-4">
+                                                    <p className="text-white/40 text-xs font-cairo mb-2">سكرين شوت مرفقة:</p>
+                                                    <div
+                                                        className="relative w-full max-w-sm rounded-[32px] overflow-hidden border border-white/10 group cursor-pointer"
+                                                        onClick={() => {
+                                                            Swal.fire({
+                                                                imageUrl: item.screenshot,
+                                                                imageAlt: 'Screenshot',
+                                                                background: '#0a0a0a',
+                                                                showConfirmButton: false,
+                                                                showCloseButton: true,
+                                                                width: 'auto',
+                                                                padding: '0'
+                                                            });
+                                                        }}
+                                                    >
+                                                        <img src={item.screenshot} alt="Screenshot" className="w-full h-auto object-cover max-h-[200px]" />
+                                                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all">
+                                                            <div className="bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20">
+                                                                <span className="text-white text-xs font-bold font-cairo">تكبير الصورة</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
 
                                             <p className="text-white/20 text-[10px] md:text-xs font-cairo">تاريخ الإرسال: {new Date(item.date).toLocaleString('ar-EG')}</p>
                                         </div>
