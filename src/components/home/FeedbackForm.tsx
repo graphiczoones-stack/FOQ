@@ -166,13 +166,16 @@ export function FeedbackForm({ isOpen, onClose }: FeedbackFormProps) {
                                                 </div>
                                             </div>
 
-                                            <Button
-                                                disabled={status === "submitting"}
-                                                className="w-full h-14 md:h-16 rounded-xl bg-neon-green text-black font-black text-xl hover:bg-neon-green/90 shadow-[0_10px_30px_rgba(0,255,204,0.4)] transition-all"
-                                                type="submit"
-                                            >
-                                                {status === "submitting" ? "جاري الإرسال..." : "إرسال الرأي"}
-                                            </Button>
+                                            <div className="relative p-[2px] overflow-hidden rounded-xl">
+                                                <div className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_20%,#ffffff_50%,transparent_80%)] animate-[spin_3s_linear_infinite]" />
+                                                <Button
+                                                    disabled={status === "submitting"}
+                                                    className="relative w-full h-14 md:h-16 rounded-[10px] bg-neon-green text-black font-black text-xl hover:bg-neon-green/90 transition-all border-none"
+                                                    type="submit"
+                                                >
+                                                    {status === "submitting" ? "جاري الإرسال..." : "إرسال الرأي"}
+                                                </Button>
+                                            </div>
                                         </form>
                                     )}
                                 </div>

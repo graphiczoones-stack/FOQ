@@ -58,15 +58,17 @@ export function Hero() {
                         >
                             <DownloadButton text="حمل اللعبة" />
 
-                            <Button
-                                onClick={() => setIsFeedbackOpen(true)}
-                                size="lg"
-                                variant="ghost"
-                                className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-xl text-white hover:bg-white/5 hover:text-neon-green transition-all"
-                            >
-                                <MessageSquare className="w-5 h-5 ml-2" />
-                                قول رأيك
-                            </Button>
+                            <div className="relative p-[2px] overflow-hidden rounded-xl">
+                                <div className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_20%,#00ffcc_50%,transparent_80%)] animate-[spin_4s_linear_infinite]" />
+                                <Button
+                                    onClick={() => setIsFeedbackOpen(true)}
+                                    size="lg"
+                                    className="relative w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-[10px] bg-black/90 text-white hover:bg-black/80 transition-all border-none"
+                                >
+                                    <MessageSquare className="w-5 h-5 ml-2" />
+                                    قول رأيك
+                                </Button>
+                            </div>
                         </motion.div>
                     </div>
 
