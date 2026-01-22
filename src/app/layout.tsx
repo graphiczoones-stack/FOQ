@@ -40,7 +40,7 @@ export const metadata: Metadata = {
   title: "لعبة فوق | FOQ Game",
   description: "لعبتك، جوّك، فوق! تحدى أصحابك في لعبة المعلومات العامة والتمثيل. حملها الأن!",
   icons: {
-    icon: "/logo.svg",
+    icon: "/logo-black.svg",
   },
 };
 
