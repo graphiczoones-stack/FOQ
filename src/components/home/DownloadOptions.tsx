@@ -1,118 +1,115 @@
 "use client";
 
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, Github, HardDrive, Cloud, X, Smartphone } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-interface DownloadOption {
-    label: string;
-    icon: React.ElementType;
-    url: string;
-    color: string;
-}
-
-const options: DownloadOption[] = [
-    {
-        label: "تحميل مباشر",
-        icon: Smartphone,
-        url: "/FOQ.apk",
-        color: "bg-neon-green text-black hover:bg-neon-green/90"
-    },
-    {
-        label: "Google Drive",
-        icon: HardDrive,
-        url: "https://drive.google.com/uc?export=download&id=1iFJnONpL47KwrM3tnbIWm00InbdZSeD1",
-        color: "bg-blue-600 text-white hover:bg-blue-700"
-    },
-    {
-        label: "GitHub",
-        icon: Github,
-        url: "https://github.com/graphiczoones-stack/FOQ/releases/download/v1.0/FOQ.apk",
-        color: "bg-gray-800 text-white hover:bg-gray-900"
-    },
-    {
-        label: "Dropbox",
-        icon: Cloud,
-        url: "https://www.dropbox.com/scl/fi/a1f12l016le0omc6s87d5/FOQ.apk?rlkey=m9w2f752au7uo4bp3ci0672vl&st=gxkce2od&dl=1",
-        color: "bg-cyan-600 text-white hover:bg-cyan-700"
-    }
-];
+import { Download, CheckCircle, ShieldCheck } from "lucide-react";
 
 export function DownloadOptions() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [status, setStatus] = useState<"idle" | "downloading" | "completed">("idle");
+    const [progress, setProgress] = useState(0);
+
+    const handleDownload = () => {
+        if (status !== "idle") return;
+
+        setStatus("downloading");
+        setProgress(0);
+
+        // Realistic progress simulation
+        const interval = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                const increment = Math.random() * 15;
+                return Math.min(prev + increment, 100);
+            });
+        }, 200);
+
+        // Finalize download
+        setTimeout(() => {
+            setStatus("completed");
+            // Actual file download trigger
+            const link = document.createElement("a");
+            link.href = "/FOQ.apk";
+            link.download = "FOQ.apk";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Reset after some time
+            setTimeout(() => setStatus("idle"), 5000);
+        }, 2500);
+    };
 
     return (
-        <>
-            <Button
-                disabled={true}
-                size="lg"
-                className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-xl bg-gray-600 text-white/50 cursor-not-allowed flex items-center gap-2"
+        <div className="flex flex-col items-center gap-4">
+            <button
+                onClick={handleDownload}
+                className="relative h-12 px-8 rounded-full bg-white/5 border border-white/10 overflow-hidden transition-all hover:bg-white/10 active:scale-95 group min-w-[220px] backdrop-blur-md"
             >
-                <X className="w-5 h-5" />
-                متوقف حالياً للتحديث
-            </Button>
-
-            <AnimatePresence>
-                {isOpen && (
-                    <div className="relative z-[99999]">
-                        {/* Backdrop */}
+                {/* Progress Bar Layer */}
+                <AnimatePresence>
+                    {status === "downloading" && (
                         <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm"
-                            onClick={() => setIsOpen(false)}
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            className="absolute inset-y-0 left-0 bg-neon-green/20"
+                            transition={{ ease: "linear" }}
                         />
+                    )}
+                </AnimatePresence>
 
-                        {/* Modal */}
-                        <div className="fixed inset-0 flex items-center justify-center p-4 pointer-events-none">
+                <div className="relative flex items-center justify-center gap-3 h-full">
+                    <AnimatePresence mode="wait">
+                        {status === "idle" && (
                             <motion.div
-                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                                animate={{ opacity: 1, scale: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
-                                className="w-full max-w-md bg-[#0a0a0a] border border-white/10 rounded-3xl p-6 pointer-events-auto relative overflow-hidden"
+                                key="idle"
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                className="flex items-center gap-2"
                             >
-                                {/* Background Decor */}
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-neon-green/10 blur-[50px] -z-10" />
-
-                                <div className="flex items-center justify-between mb-8">
-                                    <h2 className="text-2xl font-black text-white font-cairo">اختار طريقة التحميل</h2>
-                                    <button
-                                        onClick={() => setIsOpen(false)}
-                                        className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                </div>
-
-                                <div className="space-y-3">
-                                    {options.map((option, index) => (
-                                        <motion.a
-                                            key={option.label}
-                                            href={option.url}
-                                            target="_blank" // Direct download usually handles itself, but blank is safer for external links
-                                            rel="noopener noreferrer" // Security best practice
-                                            initial={{ opacity: 0, x: -20 }}
-                                            animate={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: index * 0.1 }}
-                                            download={option.label === "تحميل مباشر" ? "FOQ.apk" : undefined}
-                                            className={`flex items-center gap-4 p-4 rounded-xl transition-all hover:scale-[1.02] active:scale-95 group ${option.color}`}
-                                        >
-                                            <div className="w-10 h-10 rounded-lg bg-black/20 flex items-center justify-center shrink-0">
-                                                <option.icon className="w-6 h-6" />
-                                            </div>
-                                            <span className="font-bold font-cairo text-lg">{option.label}</span>
-                                            <Download className="w-5 h-5 mr-auto opacity-50 group-hover:opacity-100 transition-opacity" />
-                                        </motion.a>
-                                    ))}
-                                </div>
+                                <Download className="w-4 h-4 text-neon-green" />
+                                <span className="text-white font-bold font-cairo text-sm">تحميل اللعبة</span>
                             </motion.div>
-                        </div>
-                    </div>
-                )}
-            </AnimatePresence>
-        </>
+                        )}
+                        {status === "downloading" && (
+                            <motion.div
+                                key="loading"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.9 }}
+                                className="flex items-center gap-2"
+                            >
+                                <div className="w-3 h-3 border-2 border-neon-green border-t-transparent rounded-full animate-spin" />
+                                <span className="text-white font-medium font-cairo text-[13px]">جاري التحميل... {Math.round(progress)}%</span>
+                            </motion.div>
+                        )}
+                        {status === "completed" && (
+                            <motion.div
+                                key="done"
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="flex items-center gap-2"
+                            >
+                                <CheckCircle className="w-4 h-4 text-neon-green" />
+                                <span className="text-white font-bold font-cairo text-sm">بدأ التحميل!</span>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </button>
+
+            {/* Subtle Security Badge */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="flex items-center gap-2 text-[10px] text-white/30 font-bold uppercase tracking-widest"
+            >
+                <ShieldCheck className="w-3 h-3 text-neon-green/50" />
+                <span className="font-cairo uppercase">رابط مباشر وآمن</span>
+            </motion.div>
+        </div>
     );
 }
