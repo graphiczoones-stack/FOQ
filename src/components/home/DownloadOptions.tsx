@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Download, CheckCircle, ShieldCheck } from "lucide-react";
 
@@ -64,8 +64,8 @@ export function DownloadOptions() {
                 onClick={handleDownload}
                 disabled={!isDownloadEnabled}
                 className={`relative h-12 px-8 rounded-full border overflow-hidden transition-all active:scale-95 group min-w-[220px] backdrop-blur-md ${isDownloadEnabled
-                        ? "bg-white/5 border-white/10 hover:bg-white/10"
-                        : "bg-white/5 border-white/5 opacity-50 cursor-not-allowed"
+                    ? "bg-white/5 border-white/10 hover:bg-white/10"
+                    : "bg-white/5 border-white/5 opacity-50 cursor-not-allowed"
                     }`}
             >
                 {/* Progress Bar Layer */}
