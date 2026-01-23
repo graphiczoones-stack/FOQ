@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, LogOut, Check, Trash2, ShieldCheck, Mail, Phone, User, MessageSquare } from "lucide-react";
+import { Lock, LogOut, Check, Trash2, ShieldCheck, Mail, Phone, User, MessageSquare, Download, ToggleLeft, ToggleRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Swal from "sweetalert2";
 
@@ -22,6 +22,8 @@ export default function AdminPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [feedback, setFeedback] = useState<Feedback[]>([]);
+    const [isDownloadEnabled, setIsDownloadEnabled] = useState(true);
+    const [isSettingsLoading, setIsSettingsLoading] = useState(false);
 
     // Simple password - In a real app this should be an env variable
     const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "fouq_game_2024";
@@ -32,6 +34,7 @@ export default function AdminPage() {
         if (localStorage.getItem("fouq_admin_auth") === "true") {
             setIsAuthenticated(true);
             loadFeedback();
+            loadSettings();
         }
     }, []);
 
@@ -44,6 +47,18 @@ export default function AdminPage() {
             }
         } catch (error) {
             console.error('Failed to load feedback:', error);
+        }
+    };
+
+    const loadSettings = async () => {
+        try {
+            const response = await fetch('/api/admin/settings');
+            if (response.ok) {
+                const data = await response.json();
+                setIsDownloadEnabled(data.isDownloadEnabled);
+            }
+        } catch (error) {
+            console.error('Failed to load settings:', error);
         }
     };
 
@@ -133,6 +148,36 @@ export default function AdminPage() {
             }
         } catch (error) {
             console.error('Failed to toggle status:', error);
+        }
+    };
+
+    const toggleDownloadStatus = async () => {
+        setIsSettingsLoading(true);
+        const newValue = !isDownloadEnabled;
+        try {
+            const response = await fetch('/api/admin/settings', {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ isDownloadEnabled: newValue }),
+            });
+
+            if (response.ok) {
+                setIsDownloadEnabled(newValue);
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: newValue ? 'تم تفعيل التحميل' : 'تم إيقاف التحميل',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: "#1a1a1a",
+                    color: "#fff"
+                });
+            }
+        } catch (error) {
+            console.error('Failed to update settings:', error);
+        } finally {
+            setIsSettingsLoading(false);
         }
     };
 
@@ -256,6 +301,44 @@ export default function AdminPage() {
                         <LogOut className="w-5 h-5" />
                         تسجيل خروج
                     </Button>
+                </div>
+
+                {/* Game Management Section */}
+                <div className="mb-12 p-6 md:p-8 rounded-[32px] md:rounded-[40px] glass-modern border border-white/10 relative overflow-hidden">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+                        <div className="flex items-center gap-4 text-center md:text-right">
+                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-colors ${isDownloadEnabled ? "bg-neon-green" : "bg-white/10"}`}>
+                                <Download className={`${isDownloadEnabled ? "text-black" : "text-white/40"} w-7 h-7`} />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-black text-white font-cairo">تحميل اللعبة</h2>
+                                <p className="text-white/40 text-sm font-bold font-cairo">
+                                    {isDownloadEnabled ? "التحميل متاح حالياً للجميع" : "التحميل متوقف حالياً"}
+                                </p>
+                            </div>
+                        </div>
+
+                        <Button
+                            onClick={toggleDownloadStatus}
+                            disabled={isSettingsLoading}
+                            className={`h-14 md:w-56 rounded-2xl font-black font-cairo transition-all gap-3 border ${isDownloadEnabled
+                                ? "bg-white/5 border-white/10 text-white hover:bg-white/10"
+                                : "bg-neon-green border-neon-green text-black hover:bg-neon-green/90"
+                                }`}
+                        >
+                            {isDownloadEnabled ? (
+                                <>
+                                    <ToggleRight className="w-6 h-6 text-neon-green" />
+                                    <span>تعطيل التحميل</span>
+                                </>
+                            ) : (
+                                <>
+                                    <ToggleLeft className="w-6 h-6" />
+                                    <span>تفعيل التحميل</span>
+                                </>
+                            )}
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Feedback List */}
