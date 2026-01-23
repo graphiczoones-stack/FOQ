@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { MessageSquare } from "lucide-react";
-import { DownloadButton } from "@/components/ui/DownloadButton";
+import { DownloadOptions } from "@/components/home/DownloadOptions";
 import { FeedbackForm } from "./FeedbackForm";
 
 export function Hero() {
@@ -56,7 +56,7 @@ export function Hero() {
                             transition={{ delay: 0.3 }}
                             className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-4"
                         >
-                            <DownloadButton text="حمل اللعبة" />
+                            <DownloadOptions />
 
                             <div className="relative p-[2px] overflow-hidden rounded-xl">
                                 <div className="absolute inset-[-100%] bg-[conic-gradient(from_0deg,transparent_20%,#00ffcc_50%,transparent_80%)] animate-[spin_4s_linear_infinite]" />
