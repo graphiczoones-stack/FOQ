@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ReviewsOverlay } from "../home/ReviewsOverlay";
-import { DownloadButton } from "../ui/DownloadButton";
+import { DownloadOptions } from "../home/DownloadOptions";
 
 const navLinks = [
     { name: "الرئيسية", href: "/" },
@@ -80,7 +80,7 @@ export function Navbar() {
                             <span className="absolute right-0 bottom-[-4px] w-0 h-[2px] bg-neon-green group-hover:w-full transition-all duration-300 shadow-[0_0_10px_#00ffcc]" />
                         </Link>
                     ))}
-                    <DownloadButton text="حمل اللعبة" className="mr-4" />
+                    <DownloadOptions />
                 </nav>
 
                 {/* Mobile Menu Toggle */}
@@ -149,12 +149,9 @@ export function Navbar() {
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     transition={{ delay: 0.6 }}
-                                    className="mt-4"
+                                    className="mt-4 flex justify-center"
                                 >
-                                    <DownloadButton
-                                        text="حمل اللعبة الآن"
-                                        className="w-full"
-                                    />
+                                    <DownloadOptions />
                                 </motion.div>
                             </nav>
                         </motion.div>
