@@ -46,12 +46,12 @@ export function DownloadOptions() {
     return (
         <>
             <Button
-                onClick={() => setIsOpen(true)}
+                disabled={true}
                 size="lg"
-                className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-xl bg-neon-green text-black hover:bg-neon-green/90 hover:scale-105 shadow-[0_0_20px_rgba(0,255,204,0.2)] transition-all duration-300 flex items-center gap-2"
+                className="w-full sm:w-auto h-14 px-8 text-lg font-bold rounded-xl bg-gray-600 text-white/50 cursor-not-allowed flex items-center gap-2"
             >
-                <Download className="w-5 h-5" />
-                حمل اللعبة
+                <X className="w-5 h-5" />
+                متوقف حالياً للتحديث
             </Button>
 
             <AnimatePresence>
