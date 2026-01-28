@@ -47,8 +47,9 @@ export function DownloadOptions() {
             setStatus("completed");
             // Actual file download trigger
             const link = document.createElement("a");
-            link.href = "/FOQ.apk";
-            link.download = "FOQ.apk";
+            link.href = "https://github.com/graphiczoones-stack/FOQ/releases/download/v2.0.0/FOQ.apk";
+            link.setAttribute('download', 'FOQ.apk');
+            link.target = "_blank";
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
